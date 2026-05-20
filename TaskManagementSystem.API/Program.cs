@@ -5,8 +5,8 @@ using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi.Models;
 using System.Text;
 using TaskManagementSystem.API.Middlewares;
-using TaskManagementSystem.API.Services;
 using TaskManagementSystem.Application.Interfaces;
+using TaskManagementSystem.Application.Services;
 using TaskManagementSystem.Domain.Entities;
 using TaskManagementSystem.Domain.Interfaces;
 using TaskManagementSystem.Infrastructure.Persistence;
@@ -85,8 +85,6 @@ builder.Services.AddScoped<ITaskService, TaskService>();
 builder.Services.AddScoped<IAuthService, AuthService>();
 
 //// Validation
-//builder.Services.AddFluentValidationAutoValidation();
-//builder.Services.AddValidatorsFromAssemblyContaining<CreateProjectValidator>();
 
 var app = builder.Build();
 

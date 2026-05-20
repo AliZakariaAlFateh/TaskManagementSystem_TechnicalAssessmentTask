@@ -1,6 +1,8 @@
 ﻿using Microsoft.AspNetCore.Identity;
+using Microsoft.Extensions.Configuration;
 using Microsoft.IdentityModel.Tokens;
 using System.IdentityModel.Tokens.Jwt;
+using System.Linq;
 using System.Security.Claims;
 using System.Text;
 using TaskManagementSystem.Application.DTOs.Auth;
@@ -8,7 +10,7 @@ using TaskManagementSystem.Application.Interfaces;
 using TaskManagementSystem.Domain.Entities;
 using TaskManagementSystem.Shared.Responses;
 
-namespace TaskManagementSystem.API.Services
+namespace TaskManagementSystem.Application.Services
 {
     public class AuthService : IAuthService
     {
@@ -48,7 +50,7 @@ namespace TaskManagementSystem.API.Services
             if (!result.Succeeded)
             {
                 var errors = result.Errors.Select(e => e.Description).ToList();
-                return ApiResponse<AuthResponseDto>.FailResponse("Registration failed",errors);
+                return ApiResponse<AuthResponseDto>.FailResponse("Registration failed", errors);
             }
 
             // Create "User" role if it doesn't exist

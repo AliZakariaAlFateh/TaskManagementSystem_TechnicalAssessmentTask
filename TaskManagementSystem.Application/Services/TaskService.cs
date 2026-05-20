@@ -1,11 +1,16 @@
-﻿using TaskManagementSystem.Application.DTOs.Task;
+﻿using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
+using TaskManagementSystem.Application.DTOs.Task;
 using TaskManagementSystem.Application.Interfaces;
 using TaskManagementSystem.Domain.Entities;
 using TaskManagementSystem.Domain.Enums;
 using TaskManagementSystem.Domain.Interfaces;
 using TaskManagementSystem.Shared.Responses;
 
-namespace TaskManagementSystem.API.Services
+namespace TaskManagementSystem.Application.Services
 {
     public class TaskService : ITaskService
     {

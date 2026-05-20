@@ -1,10 +1,15 @@
-﻿using TaskManagementSystem.Application.DTOs.Project;
+﻿using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
+using TaskManagementSystem.Application.DTOs.Project;
 using TaskManagementSystem.Application.Interfaces;
 using TaskManagementSystem.Domain.Entities;
 using TaskManagementSystem.Domain.Interfaces;
 using TaskManagementSystem.Shared.Responses;
 
-namespace TaskManagementSystem.API.Services
+namespace TaskManagementSystem.Application.Services
 {
     public class ProjectService : IProjectService
     {
