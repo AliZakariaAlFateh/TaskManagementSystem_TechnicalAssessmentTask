@@ -8,7 +8,7 @@ namespace TaskManagementSystem.API.Controllers;
 [ApiController]
 [Route("api/[controller]")]
 
-//Without CQRS ....
+//Without CQRS .......
 //public class AuthController : ControllerBase
 //{
 
