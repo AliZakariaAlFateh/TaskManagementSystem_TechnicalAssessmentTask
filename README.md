@@ -19,6 +19,10 @@
 - JWT Authentication
 - Global Exception Handling
 - Generic Response Wrapper
+- I applied Role on Create project and Delete Project 
+  and I have an admin ::
+  Email : Admin@gmail.com
+  pass:Admin@123
 
 ## Run Commands
 

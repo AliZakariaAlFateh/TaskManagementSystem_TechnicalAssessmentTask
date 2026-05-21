@@ -5,6 +5,7 @@ using TaskManagementSystem.Application.Commands.Projects;
 using TaskManagementSystem.Application.DTOs.Project;
 using TaskManagementSystem.Application.Interfaces;
 using TaskManagementSystem.Application.Queries.Projects;
+using static Microsoft.EntityFrameworkCore.DbLoggerCategory.Database;
 namespace TaskManagementSystem.API.Controllers;
 [Authorize]
 [ApiController]
@@ -77,6 +78,7 @@ public class ProjectsController : ControllerBase
         _mediator = mediator;
     }
 
+    [Authorize(Roles = "Admin")]
     [HttpPost("create")]
     public async Task<IActionResult> Create(CreateProjectCommand command)
     {
@@ -112,12 +114,26 @@ public class ProjectsController : ControllerBase
         return Ok(response);
     }
 
+    [Authorize(Roles = "Admin")]
     [HttpDelete("delete/{id}")]
     public async Task<IActionResult> Delete(int id)
     {
+        //var response = await _mediator.Send(new DeleteProjectCommand { Id = id });
+        //if (!response.Success)
+        //    return NotFound(response);
+        //return Ok(response);
         var response = await _mediator.Send(new DeleteProjectCommand { Id = id });
+
         if (!response.Success)
-            return NotFound(response);
+        {
+            if (response.Message.Contains("permission") || response.Message.Contains("Admin"))
+                return StatusCode(403, response);
+
+            if (response.Message.Contains("not found"))
+                return NotFound(response);
+            return BadRequest(response);
+        }
+
         return Ok(response);
     }
 }

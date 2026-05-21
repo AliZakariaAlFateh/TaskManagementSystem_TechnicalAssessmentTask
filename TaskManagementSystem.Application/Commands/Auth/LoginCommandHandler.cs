@@ -44,7 +44,7 @@ namespace TaskManagementSystem.Application.Commands.Auth
 
             var response = new AuthResponseDto
             {
-                Token = GenerateJwtToken(user),
+                Token = await GenerateJwtToken(user),  
                 Email = user.Email,
                 Username = user.UserName,
                 Roles = (await _userManager.GetRolesAsync(user)).ToList()
@@ -53,10 +53,12 @@ namespace TaskManagementSystem.Application.Commands.Auth
             return ApiResponse<AuthResponseDto>.SuccessResponse(response, "Login successful");
         }
 
-        private string GenerateJwtToken(ApplicationUser user)
+        private async Task<string> GenerateJwtToken(ApplicationUser user)  
         {
             var key = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(_configuration["Jwt:Key"]));
             var creds = new SigningCredentials(key, SecurityAlgorithms.HmacSha256);
+
+            var roles = await _userManager.GetRolesAsync(user);
 
             var claims = new List<Claim>
             {
@@ -64,6 +66,12 @@ namespace TaskManagementSystem.Application.Commands.Auth
                 new Claim(ClaimTypes.Email, user.Email),
                 new Claim(ClaimTypes.Name, user.UserName)
             };
+
+            
+            foreach (var role in roles)
+            {
+                claims.Add(new Claim(ClaimTypes.Role, role));
+            }
 
             var token = new JwtSecurityToken(
                 issuer: _configuration["Jwt:Issuer"],

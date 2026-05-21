@@ -52,15 +52,16 @@ namespace TaskManagementSystem.Application.Commands.Auth
                 return ApiResponse<AuthResponseDto>.FailResponse("Registration failed", errors);
             }
 
-            // Create "User" role if it doesn't exist
-            if (!await _roleManager.RoleExistsAsync("User"))
-                await _roleManager.CreateAsync(new IdentityRole("User"));
+            string roleToAssign = "User";
 
-            await _userManager.AddToRoleAsync(user, "User");
+            if (_userManager.Users.Count() == 1)
+                roleToAssign = "Admin";
+
+            await _userManager.AddToRoleAsync(user, roleToAssign);
 
             var response = new AuthResponseDto
             {
-                Token = GenerateJwtToken(user),
+                Token = await GenerateJwtToken(user),  
                 Email = user.Email,
                 Username = user.UserName,
                 Roles = (await _userManager.GetRolesAsync(user)).ToList()
@@ -69,17 +70,24 @@ namespace TaskManagementSystem.Application.Commands.Auth
             return ApiResponse<AuthResponseDto>.SuccessResponse(response, "User registered successfully");
         }
 
-        private string GenerateJwtToken(ApplicationUser user)
+        private async Task<string> GenerateJwtToken(ApplicationUser user)
         {
             var key = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(_configuration["Jwt:Key"]));
             var creds = new SigningCredentials(key, SecurityAlgorithms.HmacSha256);
 
+            var roles = await _userManager.GetRolesAsync(user);  
+
             var claims = new List<Claim>
+    {
+        new Claim(ClaimTypes.NameIdentifier, user.Id),
+        new Claim(ClaimTypes.Email, user.Email),
+        new Claim(ClaimTypes.Name, user.UserName)
+    };
+
+            foreach (var role in roles)
             {
-                new Claim(ClaimTypes.NameIdentifier, user.Id),
-                new Claim(ClaimTypes.Email, user.Email),
-                new Claim(ClaimTypes.Name, user.UserName)
-            };
+                claims.Add(new Claim(ClaimTypes.Role, role));  
+            }
 
             var token = new JwtSecurityToken(
                 issuer: _configuration["Jwt:Issuer"],
