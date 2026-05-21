@@ -7,6 +7,8 @@
 - SQL Server
 - JWT Authentication
 - Clean Architecture implemented in this Assessment
+- Used CQRS 
+- make a code to make migration in database while the project run and make roles ...
 - Swagger
 
 ## Features
@@ -22,6 +24,10 @@
 
 ## the files of Migrations is exists inside the project in the TaskManagementSystem.Infrastructure layer 
 
+
+
+## you do not need to make migration manually 
+- because code exists in program.cs make migration while the project running ...
 
 ### Migration
 1- Add-Migration InitialCreate
